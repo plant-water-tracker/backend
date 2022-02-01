@@ -15,7 +15,7 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         const newPlant = await Plants.create(req.body)
-        res.json(newPlant)
+        res.status(201).json(newPlant)
     } catch (err) {
         next(err)
     }
@@ -23,7 +23,9 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        const updated = await Plants.update(req.params.id, req.body)
+        const { id } = req.params
+        await Plants.update(id, req.body)
+        const updated = await Plants.getById(id)
         res.json(updated)
     } catch (err) {
         next(err)
@@ -39,3 +41,5 @@ router.delete('/:id', async (req, res, next) => {
         next(err)
     }
 })
+
+module.exports = router
