@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const Users = require('./user-model')
 
-router.get('/api/users', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
         const users = await Users.get()
         res.json(users)
