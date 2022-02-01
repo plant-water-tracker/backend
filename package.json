@@ -6,6 +6,7 @@
     "server": "nodemon index.js",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
+    "resetdb": "knex migrate:rollback && knex migrate:latest && knex seed:run",
     "seed": "knex seed:run",
     "migrateh": "heroku run knex migrate:latest -a plant-water-tracker",
     "rollbackh": "heroku run knex migrate:rollback -a plant-water-tracker",

@@ -13,8 +13,22 @@ async function create(newPlant) {
     return getById(user_id)
 }
 
+function update(id, changes) {
+    return db("plants")
+      .where("plant_id", id)
+      .update(changes)
+  }
+
+function remove(id) {
+    return db("plants")
+      .where("plant_id", id)
+      .del();
+  }
+
 module.exports = {
     get,
     getById,
-    create
+    create,
+    update,
+    remove
 }
