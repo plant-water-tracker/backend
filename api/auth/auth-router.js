@@ -3,7 +3,7 @@ const router = require('express').Router();
 const User = require('../users/user-model')
 
 // Import bcrypts for hashing
-const bcryptjs = require('bcryptjs')
+const bcrypt = require('bcryptjs')
 
 // Import Middleware 
 
@@ -13,7 +13,7 @@ const tokenBuilder = require('./auth-token')
 // Routes 
 router.post('/register', (req, res, next) => {
     const user = req.body;
-    user.password = bcryptjs.hashSync(user.password, 8);
+    user.password = bcrypt.hashSync(user.password, 8);
     User.create(user)
         .then( response => {
             res.status(201).json(response)
@@ -25,7 +25,7 @@ router.post('/login', (req, res, next) => {
     const { username, password } = req.body;
     User.findBy({ username })
         .then(([user]) => {
-            if (user && bcryptjs.compareSync(password, user.password)) {
+            if (user && bcrypt.compareSync(password, user.password)) {
                 const token = tokenBuilder(user);
                 res.json({
                 message: `welcome, ${user.username}`,
@@ -42,7 +42,7 @@ router.put('/update', (req, res, next) => {
     const user = req.body
     const {user_id} = user;
     const updates = {password: user.password, phone_number: user.phone_number}
-    updates.password = bcryptjs.hashSync(updates.password, 8);
+    updates.password = bcrypt.hashSync(updates.password, 8);
     
     User.update(user_id, updates)
         .then( response => {
