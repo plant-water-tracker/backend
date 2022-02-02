@@ -27,8 +27,8 @@ function update(id, changes) {
   }
 
 async function create(newUser) {
-    const { user_id } = await db('users').insert(newUser)
-    return getById(user_id)
+    await db('users').insert(newUser)
+    return newUser
 }
 
 module.exports = {

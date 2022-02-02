@@ -9,7 +9,8 @@ async function getById(id) {
 }
 
 async function create(newPlant) {
-   return ('plants').insert(newPlant)
+    await db('plants').insert(newPlant)
+    return newPlant
 }
 
 function update(id, changes) {
