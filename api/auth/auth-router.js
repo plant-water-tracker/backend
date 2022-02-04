@@ -2,7 +2,7 @@
 const { BCRYPT_ROUNDS } = require('./secret')
 const router = require('express').Router()
 const User = require('../users/user-model')
-const { validateUniqueUsername, validateInfo } = require('./auth-middleware')
+const { validateUniqueUsername, validateInfo, validatePhone } = require('./auth-middleware')
 
 // Import bcrypts for hashing
 const bcrypt = require('bcryptjs')
@@ -13,7 +13,7 @@ const bcrypt = require('bcryptjs')
 const { tokenBuilder } = require('./auth-token')
 
 // Routes 
-router.post('/register', async (req, res, next) => {
+router.post('/register', validateUniqueUsername, validateInfo, validatePhone, async (req, res, next) => {
     try {
         const { username, password } = req.body
         const hash = bcrypt.hashSync(password, BCRYPT_ROUNDS)
