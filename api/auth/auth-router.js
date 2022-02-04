@@ -25,7 +25,7 @@ router.post('/register', validateUniqueUsername, validateInfo, validatePhone, as
     }
 })
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', validateInfo, validatePhone, async (req, res, next) => {
     try {
       const { username, password } = req.body
       const [user] = await User.getBy({ username })
@@ -42,9 +42,9 @@ router.post('/login', async (req, res, next) => {
   });
 
 // user can update phone number and password, need to add restricted access, and middlesware to make sure phone number is unique 
-router.put('/update', (req, res, next) => {
+router.put('/update', validateInfo, validatePhone, (req, res, next) => {
     const user = req.body
-    const {user_id} = user;
+    const { user_id } = user;
     const updates = {password: user.password, phone_number: user.phone_number}
     updates.password = bcrypt.hashSync(updates.password, BCRYPT_ROUNDS);
     
