@@ -4,14 +4,14 @@ const { JWT_SECRET } = require('./secret')
 
 function tokenBuilder(user) {
   const payload = {
-    subject: user.id,
+    subject: user.user_id,
     username: user.username,
-  };
+  }
   const options = {
     expiresIn: '1d',
-  };
+  }
   const token = jwt.sign(payload, JWT_SECRET, options)
-  return token;
+  return token
 }
 
 module.exports = { tokenBuilder }

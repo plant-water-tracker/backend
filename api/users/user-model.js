@@ -4,6 +4,10 @@ async function get() {
     return await db('users')
 }
 
+async function getBy(filter) {
+    return await db('users').where(filter)
+}
+
 async function getById(id) {
     return await db('users').where('user_id', id)
 }
@@ -33,6 +37,7 @@ async function create(newUser) {
 
 module.exports = {
     get,
+    getBy,
     getById,
     getPlantByUserId,
     update,

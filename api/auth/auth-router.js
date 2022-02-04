@@ -1,7 +1,8 @@
 // Imports
 const { BCRYPT_ROUNDS } = require('./secret')
-const router = require('express').Router();
+const router = require('express').Router()
 const User = require('../users/user-model')
+const { validateUniqueUsername, validateInfo } = require('./auth-middleware')
 
 // Import bcrypts for hashing
 const bcrypt = require('bcryptjs')
@@ -9,7 +10,7 @@ const bcrypt = require('bcryptjs')
 // Import Middleware 
 
 // Import jsonwebtoken and secret
-const tokenBuilder = require('./auth-token')
+const { tokenBuilder } = require('./auth-token')
 
 // Routes 
 router.post('/register', async (req, res, next) => {
@@ -24,22 +25,22 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-router.post('/login', (req, res, next) => {
-    const { username, password } = req.body;
-    User.findBy({ username })
-        .then(([user]) => {
-            if (user && bcrypt.compareSync(password, user.password)) {
-                const token = tokenBuilder(user);
-                res.json({
-                message: `welcome, ${user.username}`,
-                token: token,
-            });
-            } else {
-                next({ status: 401, message: "invalid credentials" });
-             }
-        })
-        .catch(next);
-})
+router.post('/login', async (req, res, next) => {
+    try {
+      const { username, password } = req.body
+      const [user] = await User.getBy({ username })
+  
+      if(user && bcrypt.compareSync(password, user.password)){
+        const token = tokenBuilder(user)
+        res.json({message: `Welcome, ${user.username}`, token})
+      } else {
+        next({ status: 401, message: 'Invalid credentials' })
+      }
+    } catch (err) {
+      next(err)
+    }
+  });
+
 // user can update phone number and password, need to add restricted access, and middlesware to make sure phone number is unique 
 router.put('/update', (req, res, next) => {
     const user = req.body
