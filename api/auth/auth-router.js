@@ -1,4 +1,5 @@
 // Imports
+const { BCRYPT_ROUNDS } = require('./secret')
 const router = require('express').Router();
 const User = require('../users/user-model')
 
@@ -11,14 +12,16 @@ const bcrypt = require('bcryptjs')
 const tokenBuilder = require('./auth-token')
 
 // Routes 
-router.post('/register', (req, res, next) => {
-    const user = req.body;
-    user.password = bcrypt.hashSync(user.password, 8);
-    User.create(user)
-        .then( response => {
-            res.status(201).json(response)
-        })
-        .catch(next);
+router.post('/register', async (req, res, next) => {
+    try {
+        const { username, password } = req.body
+        const hash = bcrypt.hashSync(password, BCRYPT_ROUNDS)
+        const newUser = { ...req.body, password: hash }
+        await User.create(newUser)
+        res.status(201).json(`Welcome, ${username}`)
+    } catch (err) {
+        next(err)
+    }
 })
 
 router.post('/login', (req, res, next) => {
@@ -42,7 +45,7 @@ router.put('/update', (req, res, next) => {
     const user = req.body
     const {user_id} = user;
     const updates = {password: user.password, phone_number: user.phone_number}
-    updates.password = bcrypt.hashSync(updates.password, 8);
+    updates.password = bcrypt.hashSync(updates.password, BCRYPT_ROUNDS);
     
     User.update(user_id, updates)
         .then( response => {
