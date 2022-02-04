@@ -25,7 +25,7 @@ router.post('/register', validateUniqueUsername, validateInfo, validatePhone, as
     }
 })
 
-router.post('/login', validateInfo, validatePhone, async (req, res, next) => {
+router.post('/login', validateInfo, async (req, res, next) => {
     try {
       const { username, password } = req.body
       const [user] = await User.getBy({ username })
