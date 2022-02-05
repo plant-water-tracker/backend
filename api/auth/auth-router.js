@@ -29,10 +29,9 @@ router.post('/login', validateInfo, async (req, res, next) => {
     try {
       const { username, password } = req.body
       const [user] = await User.getBy({ username })
-  
       if(user && bcrypt.compareSync(password, user.password)){
         const token = tokenBuilder(user)
-        res.json({message: `Welcome, ${user.username}`, token})
+        res.json({ message: `Welcome, ${user.username}`, token, user_id: user.user_id })
       } else {
         next({ status: 401, message: 'Invalid credentials' })
       }
@@ -44,15 +43,15 @@ router.post('/login', validateInfo, async (req, res, next) => {
 // user can update phone number and password, need to add restricted access, and middlesware to make sure phone number is unique 
 router.put('/update', validateInfo, validatePhone, (req, res, next) => {
     const user = req.body
-    const { user_id } = user;
+    const { user_id } = user
     const updates = {password: user.password, phone_number: user.phone_number}
-    updates.password = bcrypt.hashSync(updates.password, BCRYPT_ROUNDS);
+    updates.password = bcrypt.hashSync(updates.password, BCRYPT_ROUNDS)
     
     User.update(user_id, updates)
-        .then( response => {
-            res.status(200).json(response);
+        .then( () => {
+            res.status(200).json("Changes successful")
         })
-        .catch( next );
+        .catch( next )
 })
 
 module.exports = router;
