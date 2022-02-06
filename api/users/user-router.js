@@ -22,7 +22,6 @@ router.get('/:id', async (req, res, next) => {
 
 router.get('/:id/plants', async (req, res, next) => {
     try {
-        console.log("touch me")
       const plants = await Users.getPlantByUserId(req.params.id)
       res.json(plants)
     } catch (err) {
