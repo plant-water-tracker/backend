@@ -66,9 +66,12 @@ const validateInfo = async (req, res, next) => {
     }
 }
 const validateChangePassword = async (req, res, next) => {
-    const { user_id, oldPassword } = req.body
+    const { user_id, oldPassword } = req.body 
     const [user] = await Users.getById(user_id)
-    if(user && bcrypt.compareSync(oldPassword, user.password)){
+
+    if( !oldPassword ){
+        next()
+    } else if (user && bcrypt.compareSync(oldPassword, user.password)){
       next()
     } else {
       next({ status: 401, message: 'Old password incorrect' })
