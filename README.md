@@ -9,8 +9,6 @@
 | GET    | `/users/:id/plants`       | -                                 | `get current user's plants`       |
 | POST   | `/users`                  | `username, password, phoneNumber` | `create new user`                 |
 | PUT    | `/users/:id`              | `username, password, phoneNumber` | `updated user`  | `Admin`         |
-| PUT    | `/profile/roles`          | `role`                            | `update a profiles role`          |
-| PUT    | `/profile/is_active/:id`  | -                                 | `activates/deactivates a profile` | 
 
 ## The Stack and Tools
 1. Web server: [Node & Express](https://expressjs.com/)
