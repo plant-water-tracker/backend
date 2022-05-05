@@ -1,5 +1,6 @@
 // Imports
-const { BCRYPT_ROUNDS } = require('./secret')
+const { BCRYPT_ROUNDS, RUTTER_SECRET, RUTTER_CLIENT_ID } = require('./secret')
+const axios = require('axios')
 const router = require('express').Router()
 const User = require('../users/user-model')
 const { validateUniqueUsername, validateInfo, validateChangePhone, validatePhone, validateChangePassword } = require('./auth-middleware')
@@ -24,6 +25,23 @@ router.post('/register', validateUniqueUsername, validateInfo, validatePhone, as
         next(err)
     }
 })
+
+router.get('/exchange', async (req, res, next) => {
+  axios.get("https://sandbox.rutterapi.com/orders", {
+ params: {
+   access_token: "c05ea37a-f3b3-4e77-aed9-5944f78a076e", 
+   limit: 10
+ },
+ auth: {
+   username: RUTTER_CLIENT_ID,
+   password: RUTTER_SECRET,
+ }
+})
+ .then(res => console.table(res.data))
+ .catch(err => console.log( "Err", err.response))
+})
+
+
 
 router.post('/login', validateInfo, async (req, res, next) => {
     try {
@@ -62,5 +80,6 @@ router.put('/update', validateChangePhone, validateChangePassword, async (req, r
           .catch(next)
     }
 })
+
 
 module.exports = router;
